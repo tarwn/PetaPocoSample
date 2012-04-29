@@ -25,10 +25,15 @@ namespace PetaPocoSample {
 
 		private void CreateTable() {
 			using (var db = new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0")) {
-				db.Execute("CREATE TABLE Person (LastName nvarchar (40) NOT NULL, FirstName nvarchar (40))");
+				db.Execute("CREATE TABLE Person (LastName nvarchar (40) NOT NULL, FirstName nvarchar (40));");
 			}
 		}
 
 
+	}
+
+	public class Person {
+		public string LastName { get; set; }
+		public string FirstName { get; set; }
 	}
 }
