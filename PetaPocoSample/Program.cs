@@ -15,10 +15,11 @@ namespace PetaPocoSample {
 			p.CreatePerson();
 			p.CreatePerson2();
 			p.CreateDecoratedPerson();
-			Console.Read();
-			p.SelectRecords();
-			Console.Read();
-			p.SelectDecoratedRecords();
+			//p.SelectRecords();
+			//p.SelectDecoratedRecords();
+			p.SelectSingleRecord();
+			p.SelectSingleDecoratedRecord();
+
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();
@@ -88,6 +89,20 @@ namespace PetaPocoSample {
 			using (var db = GetDatabase()) {
 				var results = db.Query<DecoratedPerson>("WHERE lastname=@0", "lastname1");
 				Console.WriteLine(String.Join("\n", results.Select(p => p.ToString())));
+			}
+		}
+
+		private void SelectSingleRecord() {
+			using (var db = GetDatabase()) {
+				var result = db.Single<Person>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
+				Console.WriteLine(String.Format("{0}: {1}",result.GetType(), result));
+			}
+		}
+
+		private void SelectSingleDecoratedRecord() {
+			using (var db = GetDatabase()) {
+				var result = db.Single<DecoratedPerson>("WHERE lastname=@0", "lastname1");
+				Console.WriteLine(String.Format("{0}: {1}", result.GetType(), result));
 			}
 		}
 	}
