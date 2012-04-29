@@ -10,8 +10,8 @@ namespace PetaPocoSample {
 	class Program {
 		static void Main(string[] args) {
 			var p = new Program();
-			//p.CreateDatabase();
-			//p.CreateTable();
+			p.CreateDatabase();
+			p.CreateTable();
 			p.CreatePerson();
 			p.CreatePerson2();
 			p.CreateDecoratedPerson();
@@ -41,8 +41,8 @@ namespace PetaPocoSample {
 		}
 
 		private Database GetDatabase() {
-//			return new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0");
-			return new Database("Data Source=localhost;Initial Catalog=SampleStuff;Integrated Security=SSPI;", "System.Data.SqlClient");
+			return new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0");
+			//return new Database("Data Source=localhost;Initial Catalog=SampleStuff;Integrated Security=SSPI;", "System.Data.SqlClient");
 		}
 
 		private void OutputPersonTable(string name) {
@@ -95,7 +95,7 @@ namespace PetaPocoSample {
 		private void SelectSingleRecord() {
 			using (var db = GetDatabase()) {
 				var result = db.Single<Person>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				Console.WriteLine(String.Format("{0}: {1}",result.GetType(), result));
+				Console.WriteLine(String.Format("{0}: {1}", result.GetType(), result));
 			}
 		}
 
@@ -103,6 +103,21 @@ namespace PetaPocoSample {
 			using (var db = GetDatabase()) {
 				var result = db.Single<DecoratedPerson>("WHERE lastname=@0", "lastname1");
 				Console.WriteLine(String.Format("{0}: {1}", result.GetType(), result));
+			}
+		}
+
+		private void SelectOtherIndividualDecoratedRecords() {
+			using (var db = GetDatabase()) {
+				// T
+				var result = db.First<DecoratedPerson>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
+				// List<T>
+				var results = db.SkipTake<DecoratedPerson>(1, 1, "SELECT * FROM Person WHERE lastname=@0", "lastname1");
+				//IEnumerable<T>
+				var results2 = db.Query<DecoratedPerson>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
+				//List<T>
+				var results3 = db.Fetch<DecoratedPerson>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
+				//Page<T> - page #2 and page size of 1
+				var results4 = db.Page<DecoratedPerson>(2, 1, "SELECT * FROM Person WHERE lastname=@0", "lastname1");
 			}
 		}
 	}
@@ -117,5 +132,5 @@ namespace PetaPocoSample {
 	}
 
 	[PetaPoco.TableName("Person")]
-	public class DecoratedPerson : Person {	}
+	public class DecoratedPerson : Person { }
 }
