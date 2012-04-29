@@ -12,6 +12,12 @@ namespace PetaPocoSample {
 			var p = new Program();
 			p.CreateDatabase();
 			p.CreateTable();
+			p.CreatePerson();
+			p.CreatePerson2();
+			p.CreateDecoratedPerson();
+
+			Console.WriteLine("\nPress enter to continue");
+			Console.Read();
 		}
 
 		private SqlCeEngine CreateDatabase() {
@@ -29,11 +35,52 @@ namespace PetaPocoSample {
 			}
 		}
 
+		private Database GetDatabase() {
+			return new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0");
+		}
 
+		private void OutputPersonTable(string name) {
+			Console.WriteLine("\n" + name);
+			using (var db = GetDatabase()) {
+				var persons = db.Query<Person>("SELECT * FROM Person;");
+				Console.WriteLine(String.Join("\n", persons.Select(p => p.ToString())));
+			}
+		}
+
+		private void CreatePerson() {
+			using (var db = GetDatabase()) {
+				db.Insert("Person", null, new Person() { LastName = "lastname1", FirstName = "firstname1" });
+			}
+
+			OutputPersonTable("CreatePerson");
+		}
+
+		private void CreatePerson2() {
+			using (var db = GetDatabase()) {
+				db.Insert(new Person() { LastName = "lastname1", FirstName = "firstname1" });
+			}
+
+			OutputPersonTable("CreatePerson2");
+		}
+
+		private void CreateDecoratedPerson() {
+			using (var db = GetDatabase()) {
+				db.Insert(new DecoratedPerson() { LastName = "lastname1", FirstName = "firstname1" });
+			}
+
+			OutputPersonTable("CreateDecoratedPerson");
+		}
 	}
 
 	public class Person {
 		public string LastName { get; set; }
 		public string FirstName { get; set; }
+
+		public override string ToString() {
+			return String.Format("{0}, {1}", LastName, FirstName);
+		}
 	}
+
+	[PetaPoco.TableName("Person")]
+	public class DecoratedPerson : Person {	}
 }
