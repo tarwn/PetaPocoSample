@@ -12,14 +12,18 @@ namespace PetaPocoSample {
 			var p = new Program();
 			p.CreateDatabase();
 
-			var sample = new SingleTableSample();
-			sample.CreateTable();
-			sample.CreatePerson();
-			sample.CreateDecoratedPerson();
-			//sample.SelectRecords();
-			//sample.SelectDecoratedRecords();
-			sample.SelectSingleRecord();
-			sample.SelectSingleDecoratedRecord();
+			//var sample = new SingleTableSample();
+			//sample.CreateTable();
+			//sample.CreatePerson();
+			//sample.CreateDecoratedPerson();
+			////sample.SelectRecords();
+			////sample.SelectDecoratedRecords();
+			//sample.SelectSingleRecord();
+			//sample.SelectSingleDecoratedRecord();
+
+			var sample = new TwoTableSample();
+			sample.CreateTables();
+			sample.QuerySeperately();
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();
