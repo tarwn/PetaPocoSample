@@ -13,7 +13,7 @@ namespace PetaPocoSample {
 			p.CreateDatabase();
 			p.CreateTable();
 			p.CreatePerson();
-			p.CreatePerson2();
+			//p.CreatePerson2();
 			p.CreateDecoratedPerson();
 			//p.SelectRecords();
 			//p.SelectDecoratedRecords();
@@ -36,7 +36,7 @@ namespace PetaPocoSample {
 
 		private void CreateTable() {
 			using (var db = new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0")) {
-				db.Execute("CREATE TABLE Person (LastName nvarchar (40) NOT NULL, FirstName nvarchar (40));");
+				db.Execute("CREATE TABLE Person (Id int IDENTITY(1,1) PRIMARY KEY, LastName nvarchar (40) NOT NULL, FirstName nvarchar (40));");
 			}
 		}
 
@@ -56,19 +56,20 @@ namespace PetaPocoSample {
 
 		private void CreatePerson() {
 			using (var db = GetDatabase()) {
-				db.Insert("Person", null, new Person() { LastName = "lastname1", FirstName = "firstname1" });
+				db.Insert("Person", "Id", true, new Person() { LastName = "lastname1", FirstName = "firstname1" });
 			}
 
 			OutputPersonTable("CreatePerson");
 		}
 
-		private void CreatePerson2() {
-			using (var db = GetDatabase()) {
-				db.Insert(new Person() { LastName = "lastname2", FirstName = "firstname2" });
-			}
+		// No longer works because it tries to insert the Id and receives a SQL Error
+		//private void CreatePerson2() {
+		//    using (var db = GetDatabase()) {
+		//        db.Insert(new Person() { LastName = "lastname2", FirstName = "firstname2" });
+		//    }
 
-			OutputPersonTable("CreatePerson2");
-		}
+		//    OutputPersonTable("CreatePerson2");
+		//}
 
 		private void CreateDecoratedPerson() {
 			using (var db = GetDatabase()) {
@@ -123,14 +124,16 @@ namespace PetaPocoSample {
 	}
 
 	public class Person {
+		public int Id { get; set; }
 		public string LastName { get; set; }
 		public string FirstName { get; set; }
 
 		public override string ToString() {
-			return String.Format("{0}, {1}", LastName, FirstName);
+			return String.Format("{0}: {1}, {2}", Id, LastName, FirstName);
 		}
 	}
 
-	[PetaPoco.TableName("Person")]
+	[TableName("Person")]
+	[PrimaryKey("Id",autoIncrement=true)]
 	public class DecoratedPerson : Person { }
 }
