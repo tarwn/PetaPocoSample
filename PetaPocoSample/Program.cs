@@ -11,16 +11,15 @@ namespace PetaPocoSample {
 		static void Main(string[] args) {
 			var p = new Program();
 			p.CreateDatabase();
-			p.CreateTable();
 
-			p.CreatePerson();
-			p.CreateDecoratedPerson();
-			
-			//p.SelectRecords();
-			//p.SelectDecoratedRecords();
-			
-			p.SelectSingleRecord();
-			p.SelectSingleDecoratedRecord();
+			var sample = new SingleTableSample();
+			sample.CreateTable();
+			sample.CreatePerson();
+			sample.CreateDecoratedPerson();
+			//sample.SelectRecords();
+			//sample.SelectDecoratedRecords();
+			sample.SelectSingleRecord();
+			sample.SelectSingleDecoratedRecord();
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();
@@ -35,97 +34,8 @@ namespace PetaPocoSample {
 			return en;
 		}
 
-		private void CreateTable() {
-			using (var db = new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0")) {
-				db.Execute("CREATE TABLE Person (Id int IDENTITY(1,1) PRIMARY KEY, LastName nvarchar (40) NOT NULL, FirstName nvarchar (40));");
-			}
-		}
-
-		private Database GetDatabase() {
-			return new Database("DataSource=\"test.sdf\"; Password=\"chrissiespassword\"", "System.Data.SqlServerCe.4.0");
-			//return new Database("Data Source=localhost;Initial Catalog=SampleStuff;Integrated Security=SSPI;", "System.Data.SqlClient");
-		}
-
-		private void OutputPersonTable(string name) {
-			Console.WriteLine("\n" + name);
-			using (var db = GetDatabase()) {
-				var persons = db.Query<Person>("SELECT * FROM Person;");
-				Console.WriteLine(db.LastSQL);
-				Console.WriteLine(String.Join("\n", persons.Select(p => p.ToString())));
-			}
-		}
-
-		private void CreatePerson() {
-			using (var db = GetDatabase()) {
-				db.Insert("Person", "Id", true, new Person() { LastName = "lastname1", FirstName = "firstname1" });
-			}
-
-			OutputPersonTable("CreatePerson");
-		}
-
-		private void CreateDecoratedPerson() {
-			using (var db = GetDatabase()) {
-				db.Insert(new DecoratedPerson() { LastName = "lastname3", FirstName = "firstname3" });
-			}
-
-			OutputPersonTable("CreateDecoratedPerson");
-		}
-
-		private void SelectRecords() {
-			using (var db = GetDatabase()) {
-				var results = db.Query<Person>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				Console.WriteLine(String.Join("\n", results.Select(p => p.ToString())));
-			}
-		}
-
-		private void SelectDecoratedRecords() {
-			using (var db = GetDatabase()) {
-				var results = db.Query<DecoratedPerson>("WHERE lastname=@0", "lastname1");
-				Console.WriteLine(String.Join("\n", results.Select(p => p.ToString())));
-			}
-		}
-
-		private void SelectSingleRecord() {
-			using (var db = GetDatabase()) {
-				var result = db.Single<Person>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				Console.WriteLine(String.Format("{0}: {1}", result.GetType(), result));
-			}
-		}
-
-		private void SelectSingleDecoratedRecord() {
-			using (var db = GetDatabase()) {
-				var result = db.Single<DecoratedPerson>("WHERE lastname=@0", "lastname1");
-				Console.WriteLine(String.Format("{0}: {1}", result.GetType(), result));
-			}
-		}
-
-		private void SelectOtherIndividualDecoratedRecords() {
-			using (var db = GetDatabase()) {
-				// T
-				var result = db.First<DecoratedPerson>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				// List<T>
-				var results = db.SkipTake<DecoratedPerson>(1, 1, "SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				//IEnumerable<T>
-				var results2 = db.Query<DecoratedPerson>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				//List<T>
-				var results3 = db.Fetch<DecoratedPerson>("SELECT * FROM Person WHERE lastname=@0", "lastname1");
-				//Page<T> - page #2 and page size of 1
-				var results4 = db.Page<DecoratedPerson>(2, 1, "SELECT * FROM Person WHERE lastname=@0", "lastname1");
-			}
-		}
+		
 	}
 
-	public class Person {
-		public int Id { get; set; }
-		public string LastName { get; set; }
-		public string FirstName { get; set; }
 
-		public override string ToString() {
-			return String.Format("{0}: {1}, {2}", Id, LastName, FirstName);
-		}
-	}
-
-	[TableName("Person")]
-	[PrimaryKey("Id",autoIncrement=true)]
-	public class DecoratedPerson : Person { }
 }
