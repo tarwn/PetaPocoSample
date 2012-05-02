@@ -12,14 +12,15 @@ namespace PetaPocoSample {
 			var p = new Program();
 			p.CreateDatabase();
 			p.CreateTable();
+
 			p.CreatePerson();
-			//p.CreatePerson2();
 			p.CreateDecoratedPerson();
+			
 			//p.SelectRecords();
 			//p.SelectDecoratedRecords();
+			
 			p.SelectSingleRecord();
 			p.SelectSingleDecoratedRecord();
-
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();
@@ -61,15 +62,6 @@ namespace PetaPocoSample {
 
 			OutputPersonTable("CreatePerson");
 		}
-
-		// No longer works because it tries to insert the Id and receives a SQL Error
-		//private void CreatePerson2() {
-		//    using (var db = GetDatabase()) {
-		//        db.Insert(new Person() { LastName = "lastname2", FirstName = "firstname2" });
-		//    }
-
-		//    OutputPersonTable("CreatePerson2");
-		//}
 
 		private void CreateDecoratedPerson() {
 			using (var db = GetDatabase()) {
