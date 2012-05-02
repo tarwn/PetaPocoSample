@@ -23,7 +23,8 @@ namespace PetaPocoSample {
 
 			var sample = new TwoTableSample();
 			sample.CreateTables();
-			sample.QuerySeperately();
+			//sample.QuerySeperately();
+			sample.QueryMultiStyle();
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();

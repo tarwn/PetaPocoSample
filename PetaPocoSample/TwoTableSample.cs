@@ -25,7 +25,7 @@ namespace PetaPocoSample {
 			using (var db = GetDatabase()) {
 				db.Insert(new Address() { Street = "street1", HouseNumber = "1" });
 				db.Insert(new Person() { LastName = "lastname1", FirstName = "firstname1", AddressId = 1 });
-				db.Insert(new Person() { LastName = "lastname2", FirstName = "firstname2", AddressId = 1 });
+				db.Insert(new Person() { LastName = "lastname1", FirstName = "firstname2", AddressId = 1 });
 
 				var results = db.Query<Person>("WHERE LastName=@0", "lastname1");
 				foreach (var person in results) {
@@ -36,6 +36,25 @@ namespace PetaPocoSample {
 
 				int count = db.ExecuteScalar<int>("SELECT COUNT(*) FROM Person WHERE LastName=@0", "lastname1");
 				Console.WriteLine("Count: " + count.ToString());
+			}
+		}
+
+		public void QueryMultiStyle() { 
+			// already called CreateDatabase()
+			// already called CreateTables()
+			using (var db = GetDatabase()) {
+				db.Insert(new Address() { Street = "street1", HouseNumber = "1" });
+				db.Insert(new Person() { LastName = "lastname1", FirstName = "firstname1", AddressId = 1 });
+				db.Insert(new Person() { LastName = "lastname1", FirstName = "firstname2", AddressId = 1 });
+
+				var results = db.Query<Person, Address>(@"SELECT Person.*, Address.* 
+														  FROM Person 
+															INNER JOIN Address ON Person.AddressId = Address.Id 
+														  WHERE Person.lastname=@0", "lastname1");
+				foreach (var person in results) {
+					Console.WriteLine("Person: {0} {1}", person.LastName, person.FirstName);
+					Console.WriteLine("Address: {0} {1}", person.Address.Street, person.Address.HouseNumber);
+				}
 			}
 		}
 
