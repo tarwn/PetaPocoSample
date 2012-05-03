@@ -66,7 +66,7 @@ namespace PetaPocoSample {
 			public string FirstName { get; set; }
 			public int AddressId { get; set; }
 
-			[ResultColumn] public Address Address { get; set; }
+			[Ignore] public Address Address { get; set; }
 
 			public override string ToString() {
 				return String.Format("{0}: {1}, {2}", Id, LastName, FirstName);
