@@ -21,10 +21,18 @@ namespace PetaPocoSample {
 			//sample.SelectSingleRecord();
 			//sample.SelectSingleDecoratedRecord();
 
-			var sample = new TwoTableSample();
-			sample.CreateTables();
-			//sample.QuerySeperately();
-			sample.QueryMultiStyle();
+			//var sample = new TwoTableSample();
+			//sample.CreateTables();
+			////sample.QuerySeperately();
+			//sample.QueryMultiStyle();
+
+			var sample = new UpdateSample();
+			sample.AddSelectAndUpdate();
+			sample.AddSelectAndUpdateDecorated();
+			sample.AddSelectAndUpdateASpecificField();
+			sample.UpdateWithoutAPOCO();
+			sample.UpdateWithAStatement();
+			sample.InsertAndUpdateWithSave();
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();

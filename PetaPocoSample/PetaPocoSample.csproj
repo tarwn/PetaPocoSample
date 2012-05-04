@@ -57,6 +57,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TwoTableSample.cs" />
+    <Compile Include="UpdateSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
