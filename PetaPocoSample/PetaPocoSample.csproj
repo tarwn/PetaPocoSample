@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ManyToOneSample.cs" />
     <Compile Include="SingleTableSample.cs" />
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Program.cs" />

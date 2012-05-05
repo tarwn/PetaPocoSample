@@ -26,13 +26,22 @@ namespace PetaPocoSample {
 			////sample.QuerySeperately();
 			//sample.QueryMultiStyle();
 
-			var sample = new UpdateSample();
-			sample.AddSelectAndUpdate();
-			sample.AddSelectAndUpdateDecorated();
-			sample.AddSelectAndUpdateASpecificField();
-			sample.UpdateWithoutAPOCO();
-			sample.UpdateWithAStatement();
-			sample.InsertAndUpdateWithSave();
+			//var sample = new UpdateSample();
+			//sample.CreateTables();
+			//sample.AddSelectAndUpdate();
+			//sample.AddSelectAndUpdateDecorated();
+			//sample.AddSelectAndUpdateASpecificField();
+			//sample.UpdateWithoutAPOCO();
+			//sample.UpdateWithAStatement();
+			//sample.InsertAndUpdateWithSave();
+
+			var sample = new ManyToOneSample();
+			sample.CreateTables();
+			sample.InsertTwoPersonsAndAnAddress();
+			sample.SelectUsingDecoratedClasses();
+			sample.SelectUsingMappingAndPOCO();
+			sample.SelectReportPOCO();
+			sample.SelectWithDynamics();
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();
