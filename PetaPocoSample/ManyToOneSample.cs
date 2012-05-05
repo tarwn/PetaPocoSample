@@ -56,6 +56,23 @@ namespace PetaPocoSample {
 			}
 		}
 
+		public void SelectOneToMany() {
+			using (var db = GetDatabase()) {
+				var results = db.Query<AddressWithPeople, Person, AddressWithPeople>(
+										new AddressToPersonRelator().MapIt,
+										@"SELECT Address.*, Person.*
+											FROM Person 
+											INNER JOIN Address ON Person.AddressId = Address.Id 
+											WHERE Address.Id=@0", 1);
+
+				foreach (var address in results) {
+					Console.WriteLine("Address: {0} {1}", address.Street, address.HouseNumber);
+					foreach(var person in address.Persons)
+						Console.WriteLine("\tPerson: {0} {1}", person.LastName, person.FirstName);
+				}
+			}
+		}
+
 		public void SelectReportPOCO() {
 			using (var db = GetDatabase()) {
 				var results = db.Query<ReportPerson>(
@@ -98,6 +115,30 @@ namespace PetaPocoSample {
 			public int Id { get; set; }
 			public string Street { get; set; }
 			public string HouseNumber { get; set; }
+		}
+
+		public class AddressWithPeople : Address { 
+			public List<Person> Persons { get; set; }
+		}
+
+		public class AddressToPersonRelator {
+			public AddressWithPeople current;
+			
+			public AddressWithPeople MapIt(AddressWithPeople a, Person p) {
+				if (a == null)
+					return current;
+
+				if (a != null && current != null && a.Id == current.Id) {
+					current.Persons.Add(p);
+					return null;
+				}
+
+				var prev = current;
+				current = a;
+				current.Persons = new List<Person>() { p };
+
+				return prev;
+			}
 		}
 
 		[TableName("Person")]

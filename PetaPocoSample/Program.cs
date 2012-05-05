@@ -42,6 +42,7 @@ namespace PetaPocoSample {
 			sample.SelectUsingMappingAndPOCO();
 			sample.SelectReportPOCO();
 			sample.SelectWithDynamics();
+			sample.SelectOneToMany();
 
 			Console.WriteLine("\nPress enter to continue");
 			Console.Read();
